@@ -121,7 +121,7 @@ criterion = nn.CrossEntropyLoss(ignore_index=char_to_idx[PAD_TOKEN])
 optimizer = optim.Adam(model.parameters(), lr=0.003)
 
 # Training parameters
-num_epochs = 30
+num_epochs = 50
 validation_split = 0.2
 val_size = int(len(dataset) * validation_split)
 train_size = len(dataset) - val_size
@@ -253,20 +253,21 @@ def generate_name(model, seed, char_to_idx, idx_to_char, max_length, device, top
 
 
 # Example seed
-seed = "ai"
+seed = "z"
 generated_name, preds_time = generate_name(model, seed, char_to_idx, idx_to_char, max_length, device)
 print(f"Generated Name: {generated_name}")
 
 
 def visualize_predictions(preds_time, seed):
     plt.figure(figsize=(10, len(preds_time) * 2))
+    current_prefix = seed
     for i, (chars, probs) in enumerate(preds_time):
         plt.bar(chars, probs, color='skyblue')
-        current_prefix = seed + ''.join([chars[0] for _, chars in preds_time[:i]])
         plt.title(f"Step {i+1}: After '{current_prefix}'")
         plt.xlabel('Characters')
         plt.ylabel('Probability')
         plt.ylim(0, 1)
         plt.show()
+        current_prefix += chars[0]
         
 visualize_predictions(preds_time, seed)
